@@ -1,6 +1,10 @@
 package app
 
-import "github.com/revel/revel"
+import (
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/revel/revel"
+	"github.com/revel/revel/modules/db/app"
+)
 
 func init() {
 	// Filters is the default set of global filters.
@@ -21,7 +25,7 @@ func init() {
 
 	// register startup functions with OnAppStart
 	// ( order dependent )
-	// revel.OnAppStart(InitDB)
+	revel.OnAppStart(db.Init)
 	// revel.OnAppStart(FillCache)
 }
 
