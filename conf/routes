@@ -14,3 +14,7 @@ GET     /public/*filepath                       Static.Serve("public")
 
 # Catch all
 *       /:controller/:action                    :controller.:action
+
+
+POST     /scores/                                Score.Add
+GET      /scores/                                Score.List
