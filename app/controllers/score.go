@@ -1,6 +1,12 @@
 package controllers
 
 import (
+	"crypto/sha1"
+	"fmt"
+	"log"
+	"strconv"
+	"strings"
+
 	"github.com/galapagosit/fbranking/app/models"
 	"github.com/revel/revel"
 )
@@ -15,7 +21,31 @@ type AddResponse struct {
 	Result string `json:"result"`
 }
 
-func (c Score) Add(id string, score int, score_best int) revel.Result {
+func isValidParams(id string, score int, score_best int, sec_key string) bool {
+
+	var ary = []string{
+		id,
+		strconv.Itoa(score),
+		strconv.Itoa(score_best)}
+	joinedStr := strings.Join(ary, "db")
+
+	h := sha1.New()
+	h.Write([]byte(joinedStr))
+	bs := h.Sum(nil)
+	s := fmt.Sprintf("%x", bs)
+	log.Printf("sha1 hash is:" + s)
+
+	return true
+}
+
+func (c Score) Add(id string, score int, score_best int, sec_key string) revel.Result {
+	if !isValidParams(id, score, score_best, sec_key) {
+		res := &AddResponse{
+			Result: "ng",
+		}
+		return c.RenderJson(res)
+	}
+
 	models.CreateUser(c.Txn, id)
 	models.RegisterScore(c.Txn, id, score, score_best)
 
@@ -25,6 +55,9 @@ func (c Score) Add(id string, score int, score_best int) revel.Result {
 	return c.RenderJson(res)
 }
 
-func (c Score) List() revel.Result {
-	return c.Render()
+func (c Score) List(ids string) revel.Result {
+	idList := strings.Split(ids, ",")
+	userScores := models.GetScores(c.Txn, idList)
+
+	return c.RenderJson(userScores)
 }

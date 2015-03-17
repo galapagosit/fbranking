@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -43,4 +44,28 @@ func logging(Txn *sql.Tx, id string, score int, scoreBest int) {
 	if err != nil {
 		log.Fatal("insert error: ", err)
 	}
+}
+
+func GetScores(Txn *sql.Tx, idList []string) []interface{} {
+	var idListParam []interface{} = make([]interface{}, len(idList))
+	for i, d := range idList {
+		idListParam[i] = d
+	}
+
+	rows, err := Txn.Query("SELECT user_id, score FROM user_score WHERE user_id IN (?"+strings.Repeat(",?", len(idList)-1)+")", idListParam...)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	res := []interface{}{}
+	for rows.Next() {
+		var user_id string
+		var score int
+		if err := rows.Scan(&user_id, &score); err != nil {
+			log.Fatal(err)
+		}
+		res = append(res, map[string]interface{}{"id": user_id, "score": score})
+	}
+	return res
 }
