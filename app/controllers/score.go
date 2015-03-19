@@ -35,7 +35,11 @@ func isValidParams(id string, score int, score_best int, sec_key string) bool {
 	s := fmt.Sprintf("%x", bs)
 	log.Printf("sha1 hash is:" + s)
 
-	return true
+	if sec_key == s {
+		return true
+	} else {
+		return false
+	}
 }
 
 func (c Score) Add(id string, score int, score_best int, sec_key string) revel.Result {
