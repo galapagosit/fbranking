@@ -7,7 +7,7 @@ import (
 )
 
 func CreateUser(Txn *sql.Tx, id string) {
-	var _id int
+	var _id string
 	err := Txn.QueryRow("SELECT id FROM user WHERE id=?", id).Scan(&_id)
 	switch {
 	case err == sql.ErrNoRows:

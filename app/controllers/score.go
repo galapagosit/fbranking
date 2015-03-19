@@ -27,7 +27,7 @@ func isValidParams(id string, score int, score_best int, sec_key string) bool {
 		id,
 		strconv.Itoa(score),
 		strconv.Itoa(score_best)}
-	joinedStr := strings.Join(ary, "db")
+	joinedStr := strings.Join(ary, "db") // 適当な文字列
 
 	h := sha1.New()
 	h.Write([]byte(joinedStr))
