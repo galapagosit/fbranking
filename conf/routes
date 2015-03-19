@@ -17,4 +17,4 @@ GET     /public/*filepath                       Static.Serve("public")
 
 
 POST     /scores/                                Score.Add
-GET      /scores/                                Score.List
+POST     /scores_list/                           Score.List
