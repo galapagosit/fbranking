@@ -1,3 +1,7 @@
+# 起動
+nohup /home/hashimoto/Projects/fbranking/fbranking -importPath github.com/galapagosit/fbranking -srcPath /home/hashimoto/Projects/fbranking/src -runMode prod &
+
+
 # Welcome to Revel
 
 ## Getting Started
